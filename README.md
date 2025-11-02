@@ -1,3 +1,0 @@
-# snippets
-
-coding practice!
