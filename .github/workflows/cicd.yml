@@ -1,4 +1,4 @@
-name: CICD for WeatherApp
+name: CI-CD for Weather App 🌦
 
 on:
   push:
@@ -7,41 +7,49 @@ on:
     branches: [ "main" ]
 
 permissions:
-  contents: write
+  contents: write   # gives permission to push to gh-pages
 
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Step 2: Setup Node
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
+      # Step 3: Install dependencies (root)
       - name: Install dependencies
         run: npm install
 
-      - name: Run Linter
+      # Step 4: Lint (optional)
+      - name: Lint
         run: npm run lint
 
-      - name: Run Tests
+      # Step 5: Test (optional)
+      - name: Test
         run: npm test
 
-      - name: Build App
+      # Step 6: Build (if applicable)
+      - name: Build
         run: npm run build
 
-      - name: Upload build files
+      # Step 7: Upload artifact (optional)
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build-files
-          path: .
+          name: weatherapp-build
+          path: ./WeatherApp
 
+      # ✅ Step 8: Deploy only WeatherApp folder
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
+          publish_dir: ./WeatherApp
